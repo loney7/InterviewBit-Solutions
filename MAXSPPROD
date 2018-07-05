@@ -1,0 +1,63 @@
+# define m 1000000007
+int Solution::maxSpecialProduct(vector<int> &A) {
+    int n = A.size();
+    stack<int> st1;
+    stack<int> st2;
+    //maintain a decreasing stack
+    //left special value has to be the largest
+    vector<int> leftValue(n);
+    vector<int> rightValue(n);
+    st1.push(0);
+    leftValue[0] = 0;
+    for(int i = 1;i<n;i++) {
+        if (!st1.empty() && A[st1.top()] <= A[i]) {
+            while(!st1.empty() && A[st1.top()] <= A[i]) {
+                st1.pop();
+            }
+           
+        }
+        
+        if(st1.empty()) {
+                leftValue[i] = 0;
+            } else {
+                leftValue[i] = st1.top();
+            }
+        st1.push(i);
+        
+    }
+    
+    st2.push(n-1);
+    rightValue[n-1] = 0;
+    //  for right value we just need to
+    //  maintain the values of next larger element
+    for (int i = n-2;i>=0;i--) {
+            if(!st2.empty() && A[st2.top()] <= A[i]) {
+                while(!st2.empty() && A[st2.top()] <= A[i]) {
+                    st2.pop();
+                }
+                
+            }
+            
+            if(st2.empty()) {
+                rightValue[i] = 0;
+            } else {
+                rightValue[i] = st2.top();
+            }
+            st2.push(i);
+        
+        }
+    
+    // now we will calculate the maximum product value
+    long long int maxi = 0;//indices can be positive values only
+    for(int i = 0;i<n;i++) {
+        maxi = max(maxi, (long long)leftValue[i]*(long long)rightValue[i]);
+    }
+    
+    return maxi%m;
+    }
+    
+    
+    
+    
+
+
